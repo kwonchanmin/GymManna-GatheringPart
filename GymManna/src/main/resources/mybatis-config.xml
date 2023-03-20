@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org/DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd" >
+<configuration>
+	<!-- MyBatis 기본세팅 -->
+	<settings>
+		<!-- Data가 없을 경우 NULL로 처리할거다. -->
+		<setting name="jdbcTypeForNull" value="NULL" />
+		<!-- Log4J2와 MyBatis를 연동해서 Query문과 실행결과를 log로 출력한다.  -->
+		<setting name="logImpl" value="LOG4J2"/>
+	</settings>
+
+	<typeAliases>
+		<typeAlias type="com.mycompany.mygym.article.photo.vo.ArticlePhoto" alias="ArticlePhoto"/>
+	</typeAliases>
+</configuration>
