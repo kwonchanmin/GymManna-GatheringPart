@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mycompany.mygym.article.gathering">
+
+   <resultMap id="gathering"
+      type="com.mycompany.mygym.article.gathering.vo.Gathering">
+      <result property="articleGnum" column="article_gnum" jdbcType="BIGINT"
+         javaType="java.lang.Long" />
+      <result property="articleGtitle" column="article_gtitle" jdbcType="VARCHAR"
+         javaType="java.lang.String" /> 
+      <result property="articleGcontent" column="article_gcontent" jdbcType="VARCHAR"
+         javaType="java.lang.String" /> 
+      <result property="articleGdate" column="article_gdate" jdbcType="DATE"
+         javaType="java.sql.Date" /> 
+      <result property="userId" column="user_id" jdbcType="VARCHAR"
+         javaType="java.lang.String" />
+      <result property="categoryType" column="category_type" jdbcType="VARCHAR"
+         javaType="java.lang.String" />
+      <result property="centerNum" column="center_num" jdbcType="BIGINT"
+         javaType="java.lang.Long" />                        
+   </resultMap>
+
+<!--    <select id="selectCountList" resultMap="gathering"> -->
+   <select id="selectCountList" resultType="Integer">
+    	SELECT count(article_gnum) AS countGnum
+		FROM article_gathering 
+		WHERE center_num = (SELECT center_num FROM centertbl WHERE center_name= #{centerName})
+		ORDER BY count(article_gnum) DESC
+   </select>
+   
+   <select id="selectGnum" resultMap="gathering">
+   		SELECT article_gnum
+		FROM article_gathering 
+		WHERE center_num = (SELECT center_num FROM centertbl WHERE center_name= #{centerName})
+   </select>
+   
+   <select id="selectGatheringList" resultMap="gathering">
+    	SELECT G.article_gtitle, G.article_gnum, 
+		(SELECT COUNT(P.user_id) FROM post_gathering AS P WHERE P.article_gnum = G.article_gnum AND G.article_gnum = #{ articleGnum } ) 
+		AS countPuser
+		FROM article_gathering AS G
+		WHERE G.center_num = (SELECT C.center_num FROM centertbl AS C WHERE C.center_name= #{centerName})
+		GROUP BY G.article_gtitle, G.article_gnum
+   </select>
+   
+   <select id="selectGatheringInfo" resultMap="gathering">
+    	SELECT  G.article_gnum, G.article_gtitle, G.article_gcontent, G.article_gdate, G.category_type, G.user_id,
+    	(SELECT COUNT(P.user_id) FROM post_gathering AS P WHERE P.article_gnum = G.article_gnum AND G.article_gnum = #{ articleGnum } ) 
+		AS countPuser, 
+		(SELECT P.user_id FROM post_gathering AS P WHERE P.article_gnum = G.article_gnum AND G.article_gnum = #{articleGnum} ) 
+		AS joinUser
+		FROM article_gathering AS G
+		WHERE G.article_gnum = #{articleGnum}
+   </select>
+   
+   <insert id="createArticle" parameterType="com.mycompany.mygym.article.gathering.vo.Gathering">
+   		INSERT INTO article_gathering (article_gtitle, article_gcontent,user_id,category_type,center_num)
+   		SELECT #{articleGtitle},#{articleGcontent},#{userId},#{categoryType},center_num
+   		FROM centertbl
+   		WHERE center_name = #{centerName}
+   </insert>
+   
+   <update id="updateInfo" parameterType="com.mycompany.mygym.article.gathering.vo.Gathering">
+		UPDATE article_gathering
+		SET article_gtitle = #{articleGtitle},
+			article_gcontent = #{articleGcontent},
+			center_num = (SELECT center_num FROM centertbl WHERE center_name = #{centerName})
+		WHERE article_gnum = #{articleGnum}
+   </update>
+   
+   <delete id="deleteInfo" parameterType="com.mycompany.mygym.article.gathering.vo.Gathering">
+   		DELETE FROM article_gathering
+   		WHERE article_gnum = #{articleGnum}
+   		
+   </delete>
+
+</mapper>

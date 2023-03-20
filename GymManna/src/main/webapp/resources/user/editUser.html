@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<h3>회원정보</h3>
+<table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>비밀번호</th>
+                <th>이름</th>
+                <th>폰번호</th>
+                <th>닉네임</th>
+
+            </tr>
+        </thead>
+        <tbody>
+           <c:forEach var="user" items="${user}">
+                <tr>
+                    <td>${user.userId}</td>>
+                    <td>${user.userPassword}</td>
+                    <td>${user.userName}</td>
+                    <td>${user.userPhone}</td>
+                    <td>${user.userNickname}</td>
+                </tr>
+           </c:forEach>
+           
+        </tbody>
+    </table>
+	
+</body>
+</html>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="myCenter">
+
+   <resultMap id="center"
+      type="com.mycompany.mygym.article.gathering.vo.Center">
+      <result property="centerNum" column="center_num" jdbcType="BIGINT"
+         javaType="java.lang.Long" />
+      <result property="centerName" column="center_name" jdbcType="VARCHAR"
+         javaType="java.lang.String" />
+   </resultMap>
+
+   <select id="selectCenter" resultMap="center">
+      select  center_num, center_name
+      from center
+   </select>
+
+</mapper>

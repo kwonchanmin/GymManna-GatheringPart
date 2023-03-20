@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mycompany.mygym.article.image">
+	<resultMap id="articlePhotoResultMap"
+		type="com.mycompany.mygym.article.photo.vo.ArticlePhoto">
+		<result property="articlePnum" column="article_pnum"
+			jdbcType="BIGINT" javaType="long" />
+		<result property="articleImgurl" column="article_imgurl"
+			jdbcType="VARCHAR" javaType="String" />
+	</resultMap>
+
+	<insert id="createImage" parameterType="ArticlePhoto">
+       <![CDATA[   
+         INSERT INTO imgtbl (article_pnum, article_imgurl)
+         VALUES (#{articlePnum}, #{articleImgurl});      
+      ]]>
+	</insert>
+</mapper>
