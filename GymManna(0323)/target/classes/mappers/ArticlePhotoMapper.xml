@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mycompany.mygym.article.photo">
+	<!-- [ArticlePhoto] 게시글 테이블 -->
+	<resultMap id="articlePhotoResultMap"
+		type="com.mycompany.mygym.article.photo.vo.ArticlePhoto">
+		<result property="articlePnum" column="article_pnum"
+			jdbcType="BIGINT" javaType="java.lang.Long" />
+		<result property="articlePtitle" column="article_ptitle"
+			jdbcType="VARCHAR" javaType="java.lang.String" />
+		<result property="articlePcontent" column="article_pcontent"
+			jdbcType="VARCHAR" javaType="java.lang.String" />
+		<result property="articlePdate" column="article_pdate"
+			jdbcType="DATE" javaType="java.sql.Date" />
+		<result property="userId" column="user_id" jdbcType="VARCHAR"
+			javaType="java.lang.String" />
+	</resultMap>
+
+	<!-- [ArticleImage] 이미지 테이블 -->
+	<resultMap id="articleImageResultMap"
+		type="com.mycompany.mygym.article.photo.vo.ArticleImage">
+		<result property="articlePnum" column="article_pnum"
+			jdbcType="BIGINT" javaType="java.lang.Long" />
+		<result property="articleImgurl" column="article_imgurl"
+			jdbcType="VARCHAR" javaType="java.lang.String" />
+	</resultMap>
+
+	<!-- [ArticlePhotoImage] 유저 + 게시글 + 이미지 테이블 -->
+	<resultMap id="articlePhotoImageResultMap"
+		type="com.mycompany.mygym.article.photo.vo.ArticlePhotoImage">
+		<result property="articlePnum" column="article_pnum"
+			jdbcType="BIGINT" javaType="java.lang.Long" />
+		<result property="articlePtitle" column="article_ptitle"
+			jdbcType="VARCHAR" javaType="java.lang.String" />
+		<result property="articlePcontent" column="article_pcontent"
+			jdbcType="VARCHAR" javaType="java.lang.String" />
+		<result property="articlePdate" column="article_pdate"
+			jdbcType="DATE" javaType="java.sql.Date" />
+		<result property="userId" column="user_id" jdbcType="VARCHAR"
+			javaType="java.lang.String" />
+		<result property="userName" column="user_name"
+			jdbcType="VARCHAR" javaType="java.lang.String" />
+		<result property="articleImgurl" column="article_imgurl"
+			jdbcType="VARCHAR" javaType="java.lang.String" />
+	</resultMap>
+
+	<!-- 게시글 불러오기 -->
+	<select id="selectArticle" resultMap="articlePhotoImageResultMap">
+		<![CDATA[
+			SELECT ap.article_pnum, ap.article_ptitle, 
+			ap.article_pcontent, ap.article_pdate, u.user_id,
+			u.user_name, img.article_imgurl
+			FROM article_photo ap
+			INNER JOIN user u
+				ON ap.user_id = u.user_id
+			INNER JOIN imgtbl img
+				ON ap.article_pnum = img.article_pnum;
+		]]>
+	</select>
+
+	<!-- 게시글 생성 -->
+	<insert id="createPost" parameterType="ArticlePhoto">
+       <![CDATA[   
+         INSERT INTO article_photo (article_ptitle, article_pcontent, user_id)
+         VALUES (#{articlePtitle}, #{articlePcontent}, #{userId});      
+      ]]>
+	</insert>
+
+	<!-- 가장 최근 입력 게시글 id 불러오기 -->
+	<select id="selectNowCreatedArticle" resultType="java.lang.Long">
+		<![CDATA[
+			SELECT LAST_INSERT_ID();
+		]]>
+	</select>
+
+	<!-- 이미지 저장 -->
+	<insert id="createImage" parameterType="ArticlePhoto">
+       <![CDATA[   
+         INSERT INTO imgtbl (article_pnum, article_imgurl)
+         VALUES (#{articlePnum}, #{articleImgurl});      
+      ]]>
+	</insert>
+</mapper>
